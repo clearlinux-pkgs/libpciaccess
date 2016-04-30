@@ -4,7 +4,7 @@
 #
 Name     : libpciaccess
 Version  : 0.13.4
-Release  : 10
+Release  : 11
 URL      : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.13.4.tar.gz
 Source0  : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.13.4.tar.gz
 Summary  : Library providing generic access to the PCI bus and devices.
