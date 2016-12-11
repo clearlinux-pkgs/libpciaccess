@@ -4,7 +4,7 @@
 #
 Name     : libpciaccess
 Version  : 0.13.4
-Release  : 11
+Release  : 12
 URL      : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.13.4.tar.gz
 Source0  : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.13.4.tar.gz
 Summary  : Library providing generic access to the PCI bus and devices.
@@ -23,6 +23,7 @@ drivers to libpciaccess is located at:
 Summary: dev components for the libpciaccess package.
 Group: Development
 Requires: libpciaccess-lib
+Provides: libpciaccess-devel
 
 %description dev
 dev components for the libpciaccess package.
@@ -40,10 +41,12 @@ lib components for the libpciaccess package.
 %setup -q -n libpciaccess-0.13.4
 
 %build
+export LANG=C
 %configure --disable-static
 make V=1  %{?_smp_mflags}
 
 %check
+export LANG=C
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost
@@ -59,9 +62,10 @@ rm -rf %{buildroot}
 %files dev
 %defattr(-,root,root,-)
 /usr/include/*.h
-/usr/lib64/*.so
-/usr/lib64/pkgconfig/*.pc
+/usr/lib64/libpciaccess.so
+/usr/lib64/pkgconfig/pciaccess.pc
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/*.so.*
+/usr/lib64/libpciaccess.so.0
+/usr/lib64/libpciaccess.so.0.11.1
