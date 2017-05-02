@@ -6,7 +6,7 @@
 #
 Name     : libpciaccess
 Version  : 0.13.5
-Release  : 14
+Release  : 15
 URL      : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.13.5.tar.gz
 Source0  : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.13.5.tar.gz
 Source99 : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.13.5.tar.gz.sig
