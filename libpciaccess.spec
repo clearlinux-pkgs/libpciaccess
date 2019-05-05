@@ -6,19 +6,21 @@
 #
 Name     : libpciaccess
 Version  : 0.14
-Release  : 18
+Release  : 19
 URL      : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.14.tar.gz
 Source0  : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.14.tar.gz
 Source99 : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.14.tar.gz.sig
-Summary  : Library providing generic access to the PCI bus and devices.
+Summary  : X11 PCI access library
 Group    : Development/Tools
 License  : MIT
-Requires: libpciaccess-lib
+Requires: libpciaccess-lib = %{version}-%{release}
+Requires: libpciaccess-license = %{version}-%{release}
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
 BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
+BuildRequires : pkg-config
 BuildRequires : pkgconfig(32xorg-macros)
 BuildRequires : pkgconfig(xorg-macros)
 
@@ -31,8 +33,9 @@ drivers to libpciaccess is located at:
 %package dev
 Summary: dev components for the libpciaccess package.
 Group: Development
-Requires: libpciaccess-lib
-Provides: libpciaccess-devel
+Requires: libpciaccess-lib = %{version}-%{release}
+Provides: libpciaccess-devel = %{version}-%{release}
+Requires: libpciaccess = %{version}-%{release}
 
 %description dev
 dev components for the libpciaccess package.
@@ -41,8 +44,8 @@ dev components for the libpciaccess package.
 %package dev32
 Summary: dev32 components for the libpciaccess package.
 Group: Default
-Requires: libpciaccess-lib32
-Requires: libpciaccess-dev
+Requires: libpciaccess-lib32 = %{version}-%{release}
+Requires: libpciaccess-dev = %{version}-%{release}
 
 %description dev32
 dev32 components for the libpciaccess package.
@@ -51,6 +54,7 @@ dev32 components for the libpciaccess package.
 %package lib
 Summary: lib components for the libpciaccess package.
 Group: Libraries
+Requires: libpciaccess-license = %{version}-%{release}
 
 %description lib
 lib components for the libpciaccess package.
@@ -59,9 +63,18 @@ lib components for the libpciaccess package.
 %package lib32
 Summary: lib32 components for the libpciaccess package.
 Group: Default
+Requires: libpciaccess-license = %{version}-%{release}
 
 %description lib32
 lib32 components for the libpciaccess package.
+
+
+%package license
+Summary: license components for the libpciaccess package.
+Group: Default
+
+%description license
+license components for the libpciaccess package.
 
 
 %prep
@@ -75,17 +88,25 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1508787122
+export SOURCE_DATE_EPOCH=1557079229
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static
-make V=1  %{?_smp_mflags}
+make  %{?_smp_mflags}
 
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-export CFLAGS="$CFLAGS -m32"
-export CXXFLAGS="$CXXFLAGS -m32"
-export LDFLAGS="$LDFLAGS -m32"
+export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
+export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32"
+export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32"
+export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32"
 %configure --disable-static    --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
-make V=1  %{?_smp_mflags}
+make  %{?_smp_mflags}
 popd
 %check
 export LANG=C
@@ -93,10 +114,14 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
+cd ../build32;
+make VERBOSE=1 V=1 %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1508787122
+export SOURCE_DATE_EPOCH=1557079229
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/libpciaccess
+cp COPYING %{buildroot}/usr/share/package-licenses/libpciaccess/COPYING
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -132,3 +157,7 @@ popd
 %defattr(-,root,root,-)
 /usr/lib32/libpciaccess.so.0
 /usr/lib32/libpciaccess.so.0.11.1
+
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/libpciaccess/COPYING

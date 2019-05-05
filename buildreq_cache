@@ -1,0 +1,4 @@
+0.14
+pkg-config
+pkgconfig(32xorg-macros)
+pkgconfig(xorg-macros)
