@@ -6,11 +6,11 @@
 #
 Name     : libpciaccess
 Version  : 0.15
-Release  : 20
+Release  : 21
 URL      : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.15.tar.gz
 Source0  : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.15.tar.gz
-Source99 : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.15.tar.gz.sig
-Summary  : X11 PCI access library
+Source1 : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.15.tar.gz.sig
+Summary  : Library providing generic access to the PCI bus and devices.
 Group    : Development/Tools
 License  : MIT
 Requires: libpciaccess-lib = %{version}-%{release}
@@ -33,7 +33,6 @@ Summary: dev components for the libpciaccess package.
 Group: Development
 Requires: libpciaccess-lib = %{version}-%{release}
 Provides: libpciaccess-devel = %{version}-%{release}
-Requires: libpciaccess = %{version}-%{release}
 Requires: libpciaccess = %{version}-%{release}
 
 %description dev
@@ -87,7 +86,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1563052535
+export SOURCE_DATE_EPOCH=1568863503
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -102,9 +101,9 @@ make  %{?_smp_mflags}
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
-export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32"
-export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32"
-export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32"
+export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
+export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
+export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
 %configure --disable-static    --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
@@ -118,7 +117,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1563052535
+export SOURCE_DATE_EPOCH=1568863503
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libpciaccess
 cp COPYING %{buildroot}/usr/share/package-licenses/libpciaccess/COPYING
@@ -138,7 +137,7 @@ popd
 
 %files dev
 %defattr(-,root,root,-)
-/usr/include/*.h
+/usr/include/pciaccess.h
 /usr/lib64/libpciaccess.so
 /usr/lib64/pkgconfig/pciaccess.pc
 
