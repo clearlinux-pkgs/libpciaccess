@@ -5,12 +5,12 @@
 # Source0 file verified with key 0x4C09DD83CAAA50B2 (ajax@nwnk.net)
 #
 Name     : libpciaccess
-Version  : 0.15
-Release  : 21
-URL      : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.15.tar.gz
-Source0  : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.15.tar.gz
-Source1 : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.15.tar.gz.sig
-Summary  : Library providing generic access to the PCI bus and devices.
+Version  : 0.16
+Release  : 22
+URL      : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.16.tar.gz
+Source0  : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.16.tar.gz
+Source1 : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.16.tar.gz.sig
+Summary  : X11 PCI access library
 Group    : Development/Tools
 License  : MIT
 Requires: libpciaccess-lib = %{version}-%{release}
@@ -33,6 +33,7 @@ Summary: dev components for the libpciaccess package.
 Group: Development
 Requires: libpciaccess-lib = %{version}-%{release}
 Provides: libpciaccess-devel = %{version}-%{release}
+Requires: libpciaccess = %{version}-%{release}
 Requires: libpciaccess = %{version}-%{release}
 
 %description dev
@@ -76,9 +77,9 @@ license components for the libpciaccess package.
 
 
 %prep
-%setup -q -n libpciaccess-0.15
+%setup -q -n libpciaccess-0.16
 pushd ..
-cp -a libpciaccess-0.15 build32
+cp -a libpciaccess-0.16 build32
 popd
 
 %build
@@ -86,7 +87,8 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1568863503
+export SOURCE_DATE_EPOCH=1570916687
+# -Werror is for werrorists
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -117,7 +119,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1568863503
+export SOURCE_DATE_EPOCH=1570916687
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libpciaccess
 cp COPYING %{buildroot}/usr/share/package-licenses/libpciaccess/COPYING
