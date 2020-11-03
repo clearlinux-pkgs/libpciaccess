@@ -6,11 +6,11 @@
 #
 Name     : libpciaccess
 Version  : 0.16
-Release  : 22
+Release  : 23
 URL      : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.16.tar.gz
 Source0  : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.16.tar.gz
-Source1 : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.16.tar.gz.sig
-Summary  : X11 PCI access library
+Source1  : http://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.16.tar.gz.sig
+Summary  : Library providing generic access to the PCI bus and devices.
 Group    : Development/Tools
 License  : MIT
 Requires: libpciaccess-lib = %{version}-%{release}
@@ -33,7 +33,6 @@ Summary: dev components for the libpciaccess package.
 Group: Development
 Requires: libpciaccess-lib = %{version}-%{release}
 Provides: libpciaccess-devel = %{version}-%{release}
-Requires: libpciaccess = %{version}-%{release}
 Requires: libpciaccess = %{version}-%{release}
 
 %description dev
@@ -78,6 +77,7 @@ license components for the libpciaccess package.
 
 %prep
 %setup -q -n libpciaccess-0.16
+cd %{_builddir}/libpciaccess-0.16
 pushd ..
 cp -a libpciaccess-0.16 build32
 popd
@@ -87,15 +87,14 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1570916687
-# -Werror is for werrorists
+export SOURCE_DATE_EPOCH=1604442315
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
 export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static
 make  %{?_smp_mflags}
@@ -114,15 +113,15 @@ export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check || :
+make %{?_smp_mflags} check || :
 cd ../build32;
-make VERBOSE=1 V=1 %{?_smp_mflags} check || : || :
+make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1570916687
+export SOURCE_DATE_EPOCH=1604442315
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libpciaccess
-cp COPYING %{buildroot}/usr/share/package-licenses/libpciaccess/COPYING
+cp %{_builddir}/libpciaccess-0.16/COPYING %{buildroot}/usr/share/package-licenses/libpciaccess/be0802d65a8579a7719dc204057628d1d865d3d2
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -161,4 +160,4 @@ popd
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/libpciaccess/COPYING
+/usr/share/package-licenses/libpciaccess/be0802d65a8579a7719dc204057628d1d865d3d2
